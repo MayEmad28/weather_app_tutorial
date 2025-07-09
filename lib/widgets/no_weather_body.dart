@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class NoWeatherBody extends StatelessWidget {
   const NoWeatherBody({
@@ -7,7 +8,7 @@ class NoWeatherBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
+    return  Padding(
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: Center(
         child: Column(
