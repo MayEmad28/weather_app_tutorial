@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/services/weather_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/cubits/get_weather_cubit.dart';
+import 'package:weather_app/cubits/get_weather_cubit/get_weather_states.dart';
 import 'package:weather_app/views/search_view.dart';
 import 'package:weather_app/widgets/no_weather_body.dart';
 import 'package:weather_app/widgets/weather_info_body.dart';
@@ -11,19 +13,33 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
         title: const Text('Weather App'),
         actions: [
           IconButton(
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return SearchView();
+                  return const SearchView();
                 }));
               },
-              icon: Icon(Icons.search))
+              icon: const Icon(Icons.search))
         ],
       ),
-      body: weatherModel == null ? NoWeatherBody() : WeatherInfoBody(),
+      body: BlocBuilder<GetWeatherCubit, WeatherStates>(
+        builder: (context, state) {
+          print(state);
+          if (state is WeatherLoadedState) {
+            return WeatherInfoBody(
+              weather: state.weatherModel,
+            );
+          } else if (state is NoWeatherState) {
+            return NoWeatherBody();
+          } else if (state is WeatherFailureState) {
+            return Center(child: Text('Error'));
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
     );
   }
 }
